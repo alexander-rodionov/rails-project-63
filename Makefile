@@ -3,7 +3,7 @@
 install:
 	bundle install
 
-build: install
+build:
 	rake build
 
 test: 
