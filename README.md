@@ -1,4 +1,6 @@
-![CI status](https://github.com/alexander-rodionov/rails-project-63/actions/workflows/main.yml/badge.svg)
+![CI](https://github.com/alexander-rodionov/rails-project-63/actions/workflows/main.yml/badge.svg)
+![Hexlet_check](https://github.com/alexander-rodionov/rails-project-63/actions/workflows/hexlet-check.yml/badge.svg)
+
 
 # HexletCode
 

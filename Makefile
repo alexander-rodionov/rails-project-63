@@ -4,10 +4,12 @@ install:
 	bundle install
 
 build:
-	rake build
+	bundler exec rake build
 
 test: 
-	rake test
+	bundler exec rake test
 
 lint:
-	rubocop
+	bundler exec rubocop
+
+all: install lint build test
