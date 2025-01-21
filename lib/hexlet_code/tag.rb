@@ -3,14 +3,15 @@
 module HexletCode
   # html tag class
   class Tag
-    SINGLE_TAGS = %w[area base br col embed hr img input link meta param source track].freeze
-    def self.build(tag, *params)
+    SINGLE_TAGS = %i[area base br col embed hr img input link meta param source track].freeze
+    def self.build(tag, **params)
       is_single = SINGLE_TAGS.include? tag
 
       content = block_given? ? yield : ""
 
+      params.filter! { |x| !x.start_with? "__" }
       res = "<#{tag}"
-      res += params.any? ? (params[0].map { |k, v| " #{k}=\"#{v}\"" }).join : ""
+      res += params.any? ? (params.map { |k, v| " #{k}=\"#{v}\"" }).join : ""
       res + (is_single ? ">" : ">#{content}</#{tag}>")
     end
   end

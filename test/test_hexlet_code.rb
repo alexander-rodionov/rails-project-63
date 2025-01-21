@@ -2,216 +2,293 @@
 
 require "test_helper"
 
-class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
+class TestHexletCode < Minitest::Test
+  User = Struct.new(:name, :job, :email, :gender, keyword_init: true)
+
+  def setup
+    @user = User.new(name: "rob", job: "hexlet", gender: "m")
+  end
+
   def test_that_it_has_a_version_number
     refute_nil ::HexletCode::VERSION
   end
 
   def test_tag
-    assert_equal HexletCode::Tag.build("br"), "<br>"
-    assert_equal HexletCode::Tag.build("img", src: "path/to/image"), '<img src="path/to/image">'
-    assert_equal HexletCode::Tag.build("input", type: "submit", value: "Save"), '<input type="submit" value="Save">'
-    assert_equal (HexletCode::Tag.build("label") { "Email" }), "<label>Email</label>"
-    assert_equal (HexletCode::Tag.build("label", for: "email") { "Email" }), '<label for="email">Email</label>'
-    assert_equal HexletCode::Tag.build("div"), "<div></div>"
+    assert_equal HexletCode::Tag.build(:br), "<br>"
+    assert_equal HexletCode::Tag.build(:img, src: "path/to/image"), '<img src="path/to/image">'
+    assert_equal HexletCode::Tag.build(:input, type: "submit", value: "Save"), '<input type="submit" value="Save">'
+    assert_equal (HexletCode::Tag.build(:label) { "Email" }), "<label>Email</label>"
+    assert_equal (HexletCode::Tag.build(:label, for: "email") { "Email" }), '<label for="email">Email</label>'
+    assert_equal HexletCode::Tag.build(:div), "<div></div>"
   end
-
-  User = Struct.new(:name, :job, :email, keyword_init: true)
 
   def test_basic_form
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="post"></form>'
-    result = nil
-    HexletCode.form_for(user) { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_class
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="post" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, class: "hexlet-form") { |f| result = f }
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'
     assert_equal expected, result
   end
 
   def test_form_with_url
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="post"></form>'
-    result = nil
-    HexletCode.form_for(user, url: "/profile") { |f| result = f }
+    result = HexletCode.form_for(@user, url: "/submit") do |f|
+      f.input :name
+      f.input :job, as: :text
+    end
+    expected = '<form action="/submit" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_url_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="post" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, url: "/profile", class: "hexlet-form") { |f| result = f }
+  def test_form_with_additional_attributes
+    result = HexletCode.form_for(@user, url: "#", method: "get") do |f|
+      f.input :name, class: "user-input"
+      f.input :job
+    end
+    expected = '<form action="#" method="get"><input name="name" class="user-input" type="text" value="rob"><input name="job" type="text" value="hexlet"></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_method_get
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="get"></form>'
-    result = nil
-    HexletCode.form_for(user, method: "get") { |f| result = f }
+  def test_form_with_default_values
+    result = HexletCode.form_for(@user) do |f|
+      f.input :job, as: :text
+    end
+    expected = '<form action="#" method="post"><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_method_get_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="get" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, method: "get", class: "hexlet-form") { |f| result = f }
+  def test_form_with_overridden_default_values
+    result = HexletCode.form_for(@user, url: "#") do |f|
+      f.input :job, as: :text, rows: 50, cols: 50
+    end
+    expected = '<form action="#" method="post"><textarea name="job" cols="50" rows="50">hexlet</textarea></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_method_get_and_url
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="get"></form>'
-    result = nil
-    HexletCode.form_for(user, method: "get", url: "/profile") { |f| result = f }
+  def test_form_with_missing_field
+    assert_raises(NoMethodError) do
+      HexletCode.form_for(@user, url: "/users") do |f|
+        f.input :name
+        f.input :job, as: :text
+        f.input :age
+      end
+    end
+  end
+
+  def test_form_with_submit_button
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Submit"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input type="submit" value="Submit"></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_method_get_url_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="get" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, method: "get", url: "/profile", class: "hexlet-form") { |f| result = f }
+  def test_form_with_custom_submit_button
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_id
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="post" id="user-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form") { |f| result = f }
+  def test_form_with_multiple_inputs
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.input :gender
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input name="gender" type="text" value="m"></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_id_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="post" id="user-form" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", class: "hexlet-form") { |f| result = f }
-    assert_equal expected, result
+  def test_form_with_missing_block
+    assert_raises(ArgumentError) do
+      HexletCode.form_for(@user)
+    end
   end
 
-  def test_form_with_id_and_url
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="post" id="user-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", url: "/profile") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_id_url_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="post" id="user-form" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", url: "/profile", class: "hexlet-form") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_id_method_get
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="get" id="user-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", method: "get") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_id_method_get_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="get" id="user-form" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", method: "get", class: "hexlet-form") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_id_method_get_and_url
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="get" id="user-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", method: "get", url: "/profile") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_id_method_get_url_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="get" id="user-form" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, id: "user-form", method: "get", url: "/profile", class: "hexlet-form") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_data_attribute
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="post" data-remote="true"></form>'
-    result = nil
-    HexletCode.form_for(user, data_remote: true) { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_data_attribute_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="#" method="post" data-remote="true" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, data_remote: true, class: "hexlet-form") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_data_attribute_and_url
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="post" data-remote="true"></form>'
-    result = nil
-    HexletCode.form_for(user, data_remote: true, url: "/profile") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_data_attribute_url_and_class
-    user = User.new(name: "rob")
-    expected = '<form action="/profile" method="post" data-remote="true" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, data_remote: true, url: "/profile", class: "hexlet-form") { |f| result = f }
-    assert_equal expected, result
-  end
-
-  def test_form_with_additional_fields
-    user = User.new(name: "rob", job: "developer", email: "rob@example.com")
+  def test_form_with_empty_block
+    result = HexletCode.form_for(@user) do |f|
+    end
     expected = '<form action="#" method="post"></form>'
-    result = nil
-    HexletCode.form_for(user) { |f| result = f }
     assert_equal expected, result
   end
 
-  def test_form_with_additional_fields_and_class
-    user = User.new(name: "rob", job: "developer", email: "rob@example.com")
-    expected = '<form action="#" method="post" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, class: "hexlet-form") { |f| result = f }
+  def test_form_with_custom_method
+    result = HexletCode.form_for(@user, method: "put") do |f|
+      f.input :name
+      f.input :job, as: :text
+    end
+    expected = '<form action="#" method="put"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_additional_fields_and_url
-    user = User.new(name: "rob", job: "developer", email: "rob@example.com")
-    expected = '<form action="/profile" method="post"></form>'
-    result = nil
-    HexletCode.form_for(user, url: "/profile") { |f| result = f }
+  def test_form_with_custom_attributes
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
+      f.input :name
+      f.input :job, as: :text
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'
     assert_equal expected, result
   end
 
-  def test_form_with_additional_fields_url_and_class
-    user = User.new(name: "rob", job: "developer", email: "rob@example.com")
-    expected = '<form action="/profile" method="post" class="hexlet-form"></form>'
-    result = nil
-    HexletCode.form_for(user, url: "/profile", class: "hexlet-form") { |f| result = f }
+  def test_form_with_input_and_submit
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.submit "Submit"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><input type="submit" value="Submit"></form>'
     assert_equal expected, result
   end
 
-  def test_form_without_block
-    user = User.new(name: "rob")
-    assert_raises(LocalJumpError) { HexletCode.form_for(user) }
+  def test_form_with_input_and_custom_submit
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_with_attributes
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_submit
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Submit"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input type="submit" value="Submit"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_custom_submit
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_submit_with_attributes
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+      f.submit "Submit"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea><input type="submit" value="Submit"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_custom_submit_with_attributes
+    result = HexletCode.form_for(@user) do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_submit_and_custom_attributes
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Submit"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input type="submit" value="Submit"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_custom_submit_and_custom_attributes
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_submit_with_attributes_and_custom_attributes
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+      f.submit "Submit"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea><input type="submit" value="Submit"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_custom_submit_with_attributes_and_custom_attributes
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="post"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_submit_and_custom_attributes_and_method
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Submit"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="put"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input type="submit" value="Submit"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_custom_submit_and_custom_attributes_and_method
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
+      f.input :name
+      f.input :job, as: :text
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="put"><input name="name" type="text" value="rob"><textarea name="job" cols="20" rows="40">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_submit_with_attributes_and_custom_attributes_and_method
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+      f.submit "Submit"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="put"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea><input type="submit" value="Submit"></form>'
+    assert_equal expected, result
+  end
+
+  def test_form_with_input_and_textarea_and_custom_submit_with_attributes_and_custom_attributes_and_method
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
+      f.input :name
+      f.input :job, as: :text, rows: 50, cols: 50
+      f.submit "Save", class: "btn-primary"
+    end
+    expected = '<form action="#" class="form-class" id="form-id" method="put"><input name="name" type="text" value="rob"><textarea name="job" cols="50" rows="50">hexlet</textarea><input class="btn-primary" type="submit" value="Save"></form>'
+    assert_equal expected, result
   end
 end
