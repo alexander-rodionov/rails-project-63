@@ -10,6 +10,8 @@ module HexletCode
 
     # tag input
     def input(*args, **params)
+      @tags << { tag: :label, params: { for: args[0], value: args[0].capitalize }, __put_outer_value: true }
+
       tag_data = { tag: :input, name: args[0], params: params }
       if tag_data[:params].delete(:as) == :text
         tag_data[:tag] = :textarea
