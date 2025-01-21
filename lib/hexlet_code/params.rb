@@ -1,6 +1,7 @@
-# class for params
+# frozen_string_literal: true
 
 module HexletCode
+  # class for params
   class Params
     attr_reader :tags
 
@@ -9,7 +10,7 @@ module HexletCode
     end
 
     # tag input
-    def input(*args, **params)
+    def input(*args, **params) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       @tags << { tag: :label, params: { for: args[0], value: args[0].capitalize }, __put_outer_value: true }
 
       tag_data = { tag: :input, name: args[0], params: params }

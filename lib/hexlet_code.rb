@@ -6,6 +6,7 @@ require_relative "hexlet_code/version"
 PARAM_DEFAULTS = { url: "#", method: "post" }.freeze
 PARAM_RENAMES = { url: :action }.freeze
 
+# test assignment module
 module HexletCode
   autoload :Tag, "hexlet_code/tag"
   autoload :Params, "hexlet_code/params"
@@ -20,7 +21,8 @@ module HexletCode
     "<form#{params ? " " : ""}#{render_params(params)}>#{fields}</form>"
   end
 
-  # устанавливает для параметров значения по умолчанию и подменяет названия параметров тэга относительно параметров вызова
+  # устанавливает для параметров значения по умолчанию и подменяет названия параметров
+  # тэга относительно параметров вызова
   def self.convert_params(params)
     keys = (params.keys + PARAM_DEFAULTS.keys).uniq
     res = {}
@@ -38,7 +40,7 @@ module HexletCode
   end
 
   # преобразует полученные параметры (вложенных тэгов) в текст тэга
-  def self.convert_fields(tags, obj)
+  def self.convert_fields(tags, obj) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     tags.map do |t|
       tag = t[:tag]
       name = t[:name]
