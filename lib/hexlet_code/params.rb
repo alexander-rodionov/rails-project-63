@@ -30,7 +30,7 @@ module HexletCode
     # tab submit
     def submit(*args, **params)
       p "submit #{args}, #{params}"
-      @tags << { tag: :input, params: { type: :submit, **params, value: args[0] } }
+      @tags << { tag: :input, params: { type: :submit, **params, value: args[0] || "Save" } }
       self
     end
   end
