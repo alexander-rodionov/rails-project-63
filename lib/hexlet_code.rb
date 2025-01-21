@@ -17,6 +17,7 @@ module HexletCode
 
     params = convert_params(params)
     inner_tags = (yield Params.new)&.tags || {}
+    p inner_tags
     fields = inner_tags.any? ? convert_fields(inner_tags, data_obj) : ""
     "<form#{params ? " " : ""}#{render_params(params)}>#{fields}</form>"
   end
