@@ -13,11 +13,11 @@ module HexletCode
 
   #  строит тэг формы с параметрами из параметрами и содержимым из блока
   def self.form_for(data_obj, **params)
+    p "form_for #{params}"
     raise ArgumentError, "No block given to" unless block_given?
 
     params = convert_params(params)
     inner_tags = (yield Params.new)&.tags || {}
-    p inner_tags
     fields = inner_tags.any? ? convert_fields(inner_tags, data_obj) : ""
     "<form#{params ? " " : ""}#{render_params(params)}>#{fields}</form>"
   end
