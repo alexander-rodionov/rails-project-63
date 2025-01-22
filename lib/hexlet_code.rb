@@ -41,7 +41,7 @@ module HexletCode
   end
 
   # преобразует полученные параметры (вложенных тэгов) в текст тэга
-  def self.convert_fields(tags, obj) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+  def self.convert_fields(tags, obj) # rubocop:disable Metrics/AbcSize
     tags.map do |t|
       tag = t[:tag]
       name = t[:name]

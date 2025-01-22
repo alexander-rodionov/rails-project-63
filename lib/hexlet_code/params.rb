@@ -10,7 +10,7 @@ module HexletCode
     end
 
     # tag input
-    def input(*args, **params) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+    def input(*args, **params) # rubocop:disable Metrics/AbcSize
       p "input #{args}, #{params}"
       @tags << { tag: :label, params: { for: args[0], value: args[0].capitalize }, __put_outer_value: true }
 
