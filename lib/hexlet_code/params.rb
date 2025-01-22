@@ -18,8 +18,8 @@ module HexletCode
       if tag_data[:params].delete(:as) == :text
         tag_data[:tag] = :textarea
         tag_data[:__put_outer_value] = true
-        tag_data[:params][:cols] ||= "20"
-        tag_data[:params][:rows] ||= "40"
+        tag_data[:params][:cols] ||= '20'
+        tag_data[:params][:rows] ||= '40'
       else
         tag_data[:params][:type] = :text
       end
@@ -30,7 +30,7 @@ module HexletCode
     # tab submit
     def submit(*args, **params)
       p "submit #{args}, #{params}"
-      @tags << { tag: :input, params: { type: :submit, **params, value: args[0] || "Save" } }
+      @tags << { tag: :input, params: { type: :submit, **params, value: args[0] || 'Save' } }
       self
     end
   end

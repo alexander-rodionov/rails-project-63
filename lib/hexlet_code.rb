@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
-require_relative "hexlet_code/version"
+require_relative 'hexlet_code/version'
 
 # Main module
-PARAM_DEFAULTS = { url: "#", method: "post" }.freeze
+PARAM_DEFAULTS = { url: '#', method: 'post' }.freeze
 PARAM_RENAMES = { url: :action }.freeze
 
 # test assignment module
 module HexletCode
-  autoload :Tag, "hexlet_code/tag"
-  autoload :Params, "hexlet_code/params"
+  autoload :Tag, 'hexlet_code/tag'
+  autoload :Params, 'hexlet_code/params'
 
   #  строит тэг формы с параметрами из параметрами и содержимым из блока
   def self.form_for(data_obj, **params)
     p "form_for #{params}"
-    raise ArgumentError, "No block given to" unless block_given?
+    raise ArgumentError, 'No block given to' unless block_given?
 
     params = convert_params(params)
     inner_tags = (yield Params.new)&.tags || {}
-    fields = inner_tags.any? ? convert_fields(inner_tags, data_obj) : ""
-    "<form#{params ? " " : ""}#{render_params(params)}>#{fields}</form>"
+    fields = inner_tags.any? ? convert_fields(inner_tags, data_obj) : ''
+    "<form#{params ? ' ' : ''}#{render_params(params)}>#{fields}</form>"
   end
 
   # устанавливает для параметров значения по умолчанию и подменяет названия параметров
@@ -37,7 +37,7 @@ module HexletCode
 
   # формирует строковое представление параметров
   def self.render_params(params)
-    params.sort.to_h.map { |k, v| "#{k}=\"#{v}\"" }.join " "
+    params.sort.to_h.map { |k, v| "#{k}=\"#{v}\"" }.join ' '
   end
 
   # преобразует полученные параметры (вложенных тэгов) в текст тэга
@@ -51,7 +51,7 @@ module HexletCode
         tag_params = { name: name, **tag_params }
       end
       if t.key?(:__put_outer_value)
-        value = tag_params.delete(:value) || ""
+        value = tag_params.delete(:value) || ''
         Tag.build(tag, **tag_params) { value }
       else
         Tag.build(tag, **tag_params)

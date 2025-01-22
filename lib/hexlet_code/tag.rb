@@ -7,12 +7,12 @@ module HexletCode
     def self.build(tag, **params)
       is_single = SINGLE_TAGS.include? tag
 
-      content = block_given? ? yield : ""
+      content = block_given? ? yield : ''
 
-      params.filter! { |x| !x.start_with? "__" }
+      params.filter! { |x| !x.start_with? '__' }
       res = "<#{tag}"
-      res += params.any? ? (params.map { |k, v| " #{k}=\"#{v}\"" }).join : ""
-      res + (is_single ? ">" : ">#{content}</#{tag}>")
+      res += params.any? ? (params.map { |k, v| " #{k}=\"#{v}\"" }).join : ''
+      res + (is_single ? '>' : ">#{content}</#{tag}>")
     end
   end
 end
