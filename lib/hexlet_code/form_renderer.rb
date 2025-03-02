@@ -41,7 +41,7 @@ class FormRenderer
                           else
                             { tag: :input,
                               params: { name: field, **(params || {}),
-                                        type: :text,
+                                        type: params.delete(:type) || :text,
                                         value: entity.send(field) } }
                           end
   end
