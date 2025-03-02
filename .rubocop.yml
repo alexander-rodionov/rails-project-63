@@ -11,6 +11,7 @@ Layout/LineLength:
 
 AllCops:
     NewCops: enable
+    SuggestExtensions: false
 Gemspec/AddRuntimeDependency: # new in 1.65
   Enabled: true
 Gemspec/DeprecatedAttributeAssignment: # new in 1.30
