@@ -14,7 +14,7 @@ class FormBuilder
     @data[:inputs] << { field: field, params: params }
   end
 
-  def submit caption, **params
+  def submit caption="Submit", **params
     @data[:submits] << { caption: caption, params: params }
   end
 end
