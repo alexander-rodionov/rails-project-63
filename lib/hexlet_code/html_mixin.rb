@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module HTMLMixin
-  # extension for form renderrer to process html forms
+  # extension for form renderer to process html forms
   def process(builder_data)
     params = builder_data[:form_params].clone
     form_data = { form_data: { action: (params.delete(:url) or '#'), method: (params.delete(:method) or 'post') } }

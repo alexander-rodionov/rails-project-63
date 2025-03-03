@@ -87,12 +87,12 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Submit'
+      f.submit 'Save'
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
                 '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
+                '<input type="submit" value="Save"></form>'].join
     assert_equal expected, result
   end
 
