@@ -25,6 +25,5 @@ module HexletCode
     def to_html
       render
     end
-
   end
 end

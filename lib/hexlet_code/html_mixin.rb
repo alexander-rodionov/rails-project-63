@@ -33,7 +33,7 @@ module HTMLMixin
                           end
   end
 
-  def submit_html(builder_data, form_data, caption, params)
+  def submit_html(_builder_data, form_data, caption, params)
     form_data[:fields] << { tag: :input, params: { **params, type: :submit, value: caption } }
   end
 end
