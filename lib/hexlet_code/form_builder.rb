@@ -19,7 +19,7 @@ class FormBuilder
     end
   end
 
-  def submit(caption = "Submit", **params)
+  def submit(caption = "Save", **params)
     @data[:submits] << { caption: caption, params: params }
   end
 end
