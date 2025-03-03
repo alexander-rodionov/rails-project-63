@@ -5,7 +5,7 @@ module HexletCode
   class Tag
     # Generating tag from parameters
     def self.build(tag_name, params = {})
-      attributes = params.map { |key, value| "#{key}=\"#{value}\"" }.join(" ")
+      attributes = params.map { |key, value| "#{key}=\"#{value}\"" }.join(' ')
       if block_given? && (content = yield)
         "<#{tag_name} #{attributes}".strip + ">#{content}</#{tag_name}>"
       else
@@ -15,7 +15,7 @@ module HexletCode
 
     def self.closing(tag_name)
       if SKIP_LAST_CLOSING.include? tag_name
-        ">"
+        '>'
       else
         "></#{tag_name}>"
       end
