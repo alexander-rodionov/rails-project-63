@@ -4,15 +4,20 @@ module HTMLMixin
   # extension for form renderer to process html forms
   def process(builder_data)
     params = builder_data[:form_params].clone
-    form_data = { form_data: { action: (params.delete(:url) or '#'), method: (params.delete(:method) or 'post') } }
-    form_data[:form_data] = form_data[:form_data].merge(params)
-    form_data[:fields] = []
+    form_data = make_form_data params
     builder_data[:inputs].each do |i|
       input_html builder_data, form_data, i[:field], i[:params]
     end
     builder_data[:submits].each do |s|
       submit_html builder_data, form_data, s[:caption], s[:params]
     end
+    form_data
+  end
+
+  def make_form_data(params)
+    form_data = { form_data: { action: (params.delete(:url) or '#'), method: (params.delete(:method) or 'post') } }
+    form_data[:form_data] = form_data[:form_data].merge(params)
+    form_data[:fields] = []
     form_data
   end
 
