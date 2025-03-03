@@ -10,11 +10,16 @@ class FormBuilder
               submits: [] }
   end
 
-  def input field, **params
-    @data[:inputs] << { field: field, params: params }
+  def input(field, **params)
+    if params.fetch(:type, nil) == :submit
+      caption = params.delete(:value) || 'Submit'
+      @data[:submits] << { caption: caption, params: params }
+    else
+      @data[:inputs] << { field: field, params: params }
+    end
   end
 
-  def submit caption="Submit", **params
+  def submit(caption="Submit", **params)
     @data[:submits] << { caption: caption, params: params }
   end
 end
