@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'html_mixin'
+require_relative "html_mixin"
 
 module HexletCode
   class FormRenderer
@@ -11,7 +11,7 @@ module HexletCode
 
     def render
       form_data = process @builder_data
-      HexletCode::Tag.build('form', form_data[:form_data].sort.to_h) do
+      HexletCode::Tag.build("form", form_data[:form_data].sort.to_h) do
         form_data[:fields].map do |f|
           HexletCode::Tag.build(f[:tag], f[:params]) { f[:inner] }
         end.join

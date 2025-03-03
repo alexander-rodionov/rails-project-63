@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   User = Struct.new(:name, :job, :email, :gender, keyword_init: true)
 
   def setup
-    @user = User.new(name: 'rob', job: 'hexlet', gender: 'm')
+    @user = User.new(name: "rob", job: "hexlet", gender: "m")
   end
 
   def test_that_it_has_a_version_number
@@ -14,12 +14,12 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_tag
-    assert_equal HexletCode::Tag.build(:br), '<br>'
-    assert_equal HexletCode::Tag.build(:img, src: 'path/to/image'), '<img src="path/to/image">'
-    assert_equal HexletCode::Tag.build(:input, type: 'submit', value: 'Save'), '<input type="submit" value="Save">'
-    assert_equal (HexletCode::Tag.build(:label) { 'Email' }), '<label>Email</label>'
-    assert_equal (HexletCode::Tag.build(:label, for: 'email') { 'Email' }), '<label for="email">Email</label>'
-    assert_equal HexletCode::Tag.build(:div), '<div></div>'
+    assert_equal HexletCode::Tag.build(:br), "<br>"
+    assert_equal HexletCode::Tag.build(:img, src: "path/to/image"), '<img src="path/to/image">'
+    assert_equal HexletCode::Tag.build(:input, type: "submit", value: "Save"), '<input type="submit" value="Save">'
+    assert_equal (HexletCode::Tag.build(:label) { "Email" }), "<label>Email</label>"
+    assert_equal (HexletCode::Tag.build(:label, for: "email") { "Email" }), '<label for="email">Email</label>'
+    assert_equal HexletCode::Tag.build(:div), "<div></div>"
   end
 
   def test_basic_form
@@ -34,7 +34,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_url
-    result = HexletCode.form_for(@user, url: '/submit') do |f|
+    result = HexletCode.form_for(@user, url: "/submit") do |f|
       f.input :name
       f.input :job, as: :text
     end
@@ -45,8 +45,8 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_additional_attributes
-    result = HexletCode.form_for(@user, url: '#', method: 'get') do |f|
-      f.input :name, class: 'user-input'
+    result = HexletCode.form_for(@user, url: "#", method: "get") do |f|
+      f.input :name, class: "user-input"
       f.input :job
     end
     expected = ['<form action="#" method="get"><label for="name">Name</label>',
@@ -65,7 +65,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_overridden_default_values
-    result = HexletCode.form_for(@user, url: '#') do |f|
+    result = HexletCode.form_for(@user, url: "#") do |f|
       f.input :job, as: :text, rows: 50, cols: 50
     end
     expected = ['<form action="#" method="post"><label for="job">Job</label>',
@@ -75,7 +75,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_form_with_missing_field
     assert_raises(NoMethodError) do
-      HexletCode.form_for(@user, url: '/users') do |f|
+      HexletCode.form_for(@user, url: "/users") do |f|
         f.input :name
         f.input :job, as: :text
         f.input :age
@@ -87,7 +87,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Save'
+      f.submit "Save"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
@@ -100,7 +100,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
@@ -136,7 +136,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_custom_method
-    result = HexletCode.form_for(@user, method: 'put') do |f|
+    result = HexletCode.form_for(@user, method: "put") do |f|
       f.input :name
       f.input :job, as: :text
     end
@@ -147,7 +147,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_custom_attributes
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
       f.input :name
       f.input :job, as: :text
     end
@@ -160,7 +160,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   def test_form_with_input_and_submit
     result = HexletCode.form_for(@user) do |f|
       f.input :name
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob">',
@@ -171,7 +171,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   def test_form_with_input_and_custom_submit
     result = HexletCode.form_for(@user) do |f|
       f.input :name
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob">',
@@ -205,7 +205,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
@@ -218,7 +218,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
@@ -231,7 +231,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text, rows: 50, cols: 50
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
@@ -244,7 +244,7 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
     result = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job, as: :text, rows: 50, cols: 50
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" method="post"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob">',
@@ -254,10 +254,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_submit_and_custom_attributes
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="post">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',
@@ -267,10 +267,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_and_custom_attributes
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="post">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',
@@ -280,10 +280,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_submit_with_attributes_and_custom_attributes
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
       f.input :name
       f.input :job, as: :text, rows: 50, cols: 50
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="post">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',
@@ -293,10 +293,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_with_attributes_and_custom_attributes
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id") do |f|
       f.input :name
       f.input :job, as: :text, rows: 50, cols: 50
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="post">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',
@@ -306,10 +306,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_submit_and_custom_attributes_and_method
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id', method: 'put') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="put"><label for="name">Name</label>',
                 '<input name="name" type="text" value="rob"><label for="job">Job</label>',
@@ -319,10 +319,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_and_custom_attributes_and_method
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id', method: 'put') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
       f.input :name
       f.input :job, as: :text
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="put">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',
@@ -332,10 +332,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_submit_with_attributes_and_custom_attributes_and_method
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id', method: 'put') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
       f.input :name
       f.input :job, as: :text, rows: 50, cols: 50
-      f.submit 'Submit'
+      f.submit "Submit"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="put">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',
@@ -345,10 +345,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_with_attributes_and_custom_attributes_and_method
-    result = HexletCode.form_for(@user, url: '#', class: 'form-class', id: 'form-id', method: 'put') do |f|
+    result = HexletCode.form_for(@user, url: "#", class: "form-class", id: "form-id", method: "put") do |f|
       f.input :name
       f.input :job, as: :text, rows: 50, cols: 50
-      f.submit 'Save', class: 'btn-primary'
+      f.submit "Save", class: "btn-primary"
     end
     expected = ['<form action="#" class="form-class" id="form-id" method="put">',
                 '<label for="name">Name</label><input name="name" type="text" value="rob">',

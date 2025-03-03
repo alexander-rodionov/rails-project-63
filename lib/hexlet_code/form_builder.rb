@@ -12,7 +12,7 @@ class FormBuilder
 
   def input(field, **params)
     if params.fetch(:type, nil) == :submit
-      caption = params.delete(:value) || 'Submit'
+      caption = params.delete(:value) || "Submit"
       @data[:submits] << { caption: caption, params: params }
     else
       @data[:inputs] << { field: field, params: params }
