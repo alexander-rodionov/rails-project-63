@@ -271,6 +271,9 @@ Style/SwapValues: # new in 1.1
 Style/YAMLFileRead: # new in 1.53
   Enabled: true
 
+Style/MethodCallWithArgsParentheses:
+  Enabled: true
+
 Style/StringConcatenation:
   Enabled: false
 
@@ -282,3 +285,6 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Enabled: true
+
+Style/SymbolProc:
+  Enabled: false

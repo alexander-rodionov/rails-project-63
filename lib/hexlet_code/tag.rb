@@ -14,7 +14,7 @@ module HexletCode
     end
 
     def self.closing(tag_name)
-      if SKIP_LAST_CLOSING.include? tag_name
+      if SKIP_LAST_CLOSING.include?(tag_name)
         '>'
       else
         "></#{tag_name}>"

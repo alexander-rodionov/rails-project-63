@@ -1,29 +1,44 @@
 # frozen_string_literal: true
 
-require_relative 'html_mixin'
-
 module HexletCode
   class FormRenderer
-    # Renders a form
     def initialize(builder_data)
       @builder_data = builder_data
     end
 
     def render
-      form_data = process @builder_data
-      HexletCode::Tag.build('form', form_data[:form_data].sort.to_h) do
-        form_data[:fields].map do |f|
-          HexletCode::Tag.build(f[:tag], f[:params]) { f[:inner] }
+      process_form
+      HexletCode::Tag.build('form', @form_processed[:form].sort.to_h) do
+        @form_processed[:fields].map do |f|
+          HexletCode::Tag.build(f[:tag], f[:options]) { f[:inner] }
         end.join
       end
     end
-  end
 
-  class FormRendererHtml < FormRenderer
-    include HTMLMixin
+    def process_form
+      @form_processed = { form: @builder_data[:form_options], fields: [] }
+      @builder_data[:inputs].each do |i|
+        input_html(i[:field], i[:options])
+      end
+      submit_html(@builder_data[:submit][:caption], @builder_data[:submit][:options]) if submit_defined?
+      @form_processed
+    end
 
-    def to_html
-      render
+    def input_html(field, options)
+      @form_processed[:fields].concat(HexletCode::Inputs.input_class_factory(field: field, options: options,
+                                                                             entity: entity).process)
+    end
+
+    def submit_html(caption, options)
+      @form_processed[:fields] << { tag: :input, options: { **options, type: :submit, value: caption } }
+    end
+
+    def submit_defined?
+      !@builder_data[:submit][:caption].nil?
+    end
+
+    def entity
+      @builder_data[:entity]
     end
   end
 end
