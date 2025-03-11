@@ -3,7 +3,6 @@
 module HexletCode
   SKIP_LAST_CLOSING = %i[br img input].freeze
   class Tag
-    # Generating tag from parameters
     def self.build(tag_name, params = {})
       attributes = params.map { |key, value| "#{key}=\"#{value}\"" }.join(' ')
       if block_given? && (content = yield)
