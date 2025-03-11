@@ -13,7 +13,7 @@ module HexletCode
     # 1. Нейминг fb неинформативен, это прям моветон в мире программирования и так не надо.
     form_builder = FormBuilder.new(entity, params)
     yield(form_builder) if block_given?
-    FormRenderer.new(form_builder.data).render
+    FormRenderer.new(form_builder.form_data).render
   end
 
   class Error < StandardError; end

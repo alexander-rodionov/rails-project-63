@@ -27,10 +27,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.input(:job, as: :text)
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected =
+    #         ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_url
@@ -38,10 +39,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.input(:job, as: :text)
     end
-    expected = ['<form action="/submit" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="/submit" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_additional_attributes
@@ -49,28 +50,28 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name, class: 'user-input')
       f.input(:job)
     end
-    expected = ['<form action="#" method="get"><label for="name">Name</label>',
-                '<input name="name" class="user-input" type="text" value="rob">',
-                '<label for="job">Job</label><input name="job" type="text" value="hexlet"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="get"><label for="name">Name</label>',
+    #             '<input name="name" class="user-input" type="text" value="rob">',
+    #             '<label for="job">Job</label><input name="job" type="text" value="hexlet"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_default_values
     result = HexletCode.form_for(@user) do |f|
       f.input(:job, as: :text)
     end
-    expected = ['<form action="#" method="post"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_overridden_default_values
     result = HexletCode.form_for(@user, url: '#') do |f|
       f.input(:job, as: :text, rows: 50, cols: 50)
     end
-    expected = ['<form action="#" method="post"><label for="job">Job</label>',
-                '<textarea name="job" cols="50" rows="50">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="50" rows="50">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_missing_field
@@ -85,8 +86,8 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
 
   def test_form_only_submit
     result = HexletCode.form_for(@user, url: '/users')
-    expected = ['<form action="/users" method="post"><input type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="/users" method="post"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_submit_button
@@ -95,11 +96,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Save')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_custom_submit_button
@@ -108,11 +109,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_multiple_inputs
@@ -121,24 +122,18 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.input(:gender)
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea><label for="gender">Gender</label>',
-                '<input name="gender" type="text" value="m"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea><label for="gender">Gender</label>',
+    #             '<input name="gender" type="text" value="m"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
-
-  # def test_form_with_missing_block
-  #   assert_raises(ArgumentError) do
-  #     HexletCode.form_for(@user)
-  #   end
-  # end
 
   def test_form_with_empty_block
     result = HexletCode.form_for(@user) do |f| # rubocop:disable Lint/EmptyBlock
     end
-    expected = '<form action="#" method="post"><input type="submit" value="Save"></form>'
-    assert_equal(expected, result)
+    # expected = '<form action="#" method="post"></form>'
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_custom_method
@@ -146,10 +141,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.input(:job, as: :text)
     end
-    expected = ['<form action="#" method="put"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="put"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_custom_attributes
@@ -157,10 +152,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.input(:job, as: :text)
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="post">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="post">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_submit
@@ -168,10 +163,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.submit('Submit')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob">',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob">',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_custom_submit
@@ -179,10 +174,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob">',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob">',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea
@@ -190,10 +185,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.input(:job, as: :text)
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_with_attributes
@@ -201,10 +196,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:name)
       f.input(:job, as: :text, rows: 50, cols: 50)
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="50" rows="50">hexlet</textarea></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="50" rows="50">hexlet</textarea></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_submit
@@ -213,11 +208,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Submit')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_custom_submit
@@ -226,11 +221,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_submit_with_attributes
@@ -239,11 +234,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text, rows: 50, cols: 50)
       f.submit('Submit')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="50" rows="50">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="50" rows="50">hexlet</textarea>',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_with_attributes
@@ -252,11 +247,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text, rows: 50, cols: 50)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" method="post"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" method="post"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_submit_and_custom_attributes
@@ -265,11 +260,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Submit')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="post">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="post">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_and_custom_attributes
@@ -278,11 +273,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="post">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="post">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_submit_with_attributes_and_custom_attributes
@@ -291,11 +286,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text, rows: 50, cols: 50)
       f.submit('Submit')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="post">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="post">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_with_attributes_and_custom_attributes
@@ -304,11 +299,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text, rows: 50, cols: 50)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="post">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="post">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_submit_and_custom_attributes_and_method
@@ -317,11 +312,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Submit')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="put"><label for="name">Name</label>',
-                '<input name="name" type="text" value="rob"><label for="job">Job</label>',
-                '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="put"><label for="name">Name</label>',
+    #             '<input name="name" type="text" value="rob"><label for="job">Job</label>',
+    #             '<textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_and_custom_attributes_and_method
@@ -330,11 +325,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="put">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="put">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="20" rows="40">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_submit_with_attributes_and_custom_attributes_and_method
@@ -343,11 +338,11 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text, rows: 50, cols: 50)
       f.submit('Submit')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="put">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
-                '<input type="submit" value="Submit"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="put">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
+    #             '<input type="submit" value="Submit"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 
   def test_form_with_input_and_textarea_and_custom_submit_with_attributes_and_custom_attributes_and_method
@@ -356,10 +351,10 @@ class TestHexletCode < Minitest::Test # rubocop:disable Metrics/ClassLength
       f.input(:job, as: :text, rows: 50, cols: 50)
       f.submit('Save', class: 'btn-primary')
     end
-    expected = ['<form action="#" class="form-class" id="form-id" method="put">',
-                '<label for="name">Name</label><input name="name" type="text" value="rob">',
-                '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
-                '<input class="btn-primary" type="submit" value="Save"></form>'].join
-    assert_equal(expected, result)
+    # expected = ['<form action="#" class="form-class" id="form-id" method="put">',
+    #             '<label for="name">Name</label><input name="name" type="text" value="rob">',
+    #             '<label for="job">Job</label><textarea name="job" cols="50" rows="50">hexlet</textarea>',
+    #             '<input class="btn-primary" type="submit" value="Save"></form>'].join
+    assert_equal(load_expected(__method__), result)
   end
 end

@@ -8,7 +8,7 @@ module HexletCode
           options: { name: @field,
                      **@options.except(:type),
                      type: :text,
-                     value: @entity.send(@field) } }
+                     value: @data } }
       end
     end
   end

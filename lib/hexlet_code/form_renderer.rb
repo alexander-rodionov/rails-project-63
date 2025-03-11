@@ -18,15 +18,14 @@ module HexletCode
     def process_form
       @form_processed = { form: @builder_data[:form_options], fields: [] }
       @builder_data[:inputs].each do |i|
-        input_html(i[:field], i[:options])
+        input_html(**i) # i[:field], i[:options])
       end
       submit_html(@builder_data[:submit][:caption], @builder_data[:submit][:options]) if submit_defined?
       @form_processed
     end
 
-    def input_html(field, options)
-      @form_processed[:fields].concat(HexletCode::Inputs.input_class_factory(field: field, options: options,
-                                                                             entity: entity).process)
+    def input_html(input_data)
+      @form_processed[:fields].concat(HexletCode::Inputs::BaseInput.input_class_factory(**input_data).process)
     end
 
     def submit_html(caption, options)
@@ -35,10 +34,6 @@ module HexletCode
 
     def submit_defined?
       !@builder_data[:submit][:caption].nil?
-    end
-
-    def entity
-      @builder_data[:entity]
     end
   end
 end
