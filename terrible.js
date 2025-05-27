@@ -6,6 +6,8 @@ myGlobal = 'I am global pollution';
 var x = 10;
 var y = 20;
 
+
+
 // 3. Reassigning const (no-const-assign)
 const PI = 3.14;
 PI = 3.14159;  // Oops!
