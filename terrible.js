@@ -1,4 +1,3 @@
-/* eslint-disable */  // Disabling ESLint right away (bad practice)
 
 // 1. Undeclared global variable (no-var, no-undef)
 myGlobal = 'I am global pollution';
