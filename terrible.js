@@ -1,7 +1,5 @@
 
 
-
-
 // 1. Undeclared global variable (no-var, no-undef)
 myGlobal = 'I am global pollution';
 
